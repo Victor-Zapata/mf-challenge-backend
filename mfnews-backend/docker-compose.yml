@@ -1,0 +1,19 @@
+
+version: '3.8' 
+
+services:
+  db:
+    image: postgres:16-alpine # Usamos la imagen oficial de PostgreSQL, versión 16, y la variante 'alpine' que es más ligera.
+    restart: always # Asegura que el contenedor se reinicie si falla.
+    environment:
+      POSTGRES_DB: mfnews_db      # Nombre de tu base de datos
+      POSTGRES_USER: admin        # Usuario para la base de datos
+      POSTGRES_PASSWORD: password # Contraseña para el usuario
+    ports:
+      - "5432:5432" # Mapea el puerto 5432 de tu máquina al puerto 5432 del contenedor (puerto por defecto de PostgreSQL).
+    volumes:
+      - db_data:/var/lib/postgresql/data # Persistencia de datos: Guarda los datos de la DB en un volumen para que no se pierdan al detener/eliminar el contenedor.
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql # Esto es opcional, pero útil para scripts de inicialización.
+
+volumes:
+  db_data: # Define el volumen donde se guardarán los datos de la DB.
