@@ -1,9 +1,8 @@
-// mfnews-backend/app.js (o server.js)
 const express = require('express');
 const cors = require('cors'); // Importa el módulo CORS
 const pool = require('./db/config'); // Tu pool de conexiones a la DB
 
-// Importa las rutas de noticias que vas a crear
+// Importa las rutas de noticias que vamos a crear
 const newsRoutes = require('./routes/news');
 
 const app = express();
@@ -15,9 +14,9 @@ app.use(express.json()); // Permite a Express leer cuerpos de petición en forma
 
 // MONTAJE DE RUTAS
 // Aquí le decimos a Express que use las rutas definidas en newsRoutes para todo lo que empiece con '/api'
-app.use('/api', newsRoutes);
+app.use('/api/news', newsRoutes);
 
-// ENDPOINT DE PRUEBA (puedes mantenerlo o eliminarlo una vez que todo funcione)
+// ENDPOINT DE PRUEBA 
 app.get('/', async (req, res) => {
     try {
         const result = await pool.query('SELECT NOW()');

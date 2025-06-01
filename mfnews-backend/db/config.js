@@ -1,11 +1,10 @@
-// mfnews-backend/db/config.js
 require('dotenv').config(); // Carga las variables de entorno desde .env
 
 const { Pool } = require('pg');
 
 const pool = new Pool({
     user: process.env.DB_USER || 'admin',
-    host: process.env.DB_HOST || 'localhost', // 'localhost' si usas Docker Desktop directamente sin una red bridge específica
+    host: process.env.DB_HOST || 'localhost', 
     database: process.env.DB_NAME || 'mfnews_db',
     password: process.env.DB_PASSWORD || 'password',
     port: process.env.DB_PORT || 5432,
