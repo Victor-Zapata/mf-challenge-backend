@@ -69,3 +69,65 @@ GET /api/news/:id: Obtiene los detalles de una noticia específica utilizando su
 POST /api/news: Crea una nueva noticia. Los datos de la noticia se envían en el cuerpo de la solicitud.
 PUT /api/news/:id: Actualiza completamente una noticia existente. Los datos actualizados se envían en el cuerpo de la solicitud.
 DELETE /api/news/:id: Elimina una noticia de la base de datos utilizando su ID.
+
+## **Configuración y Ejecución de Pruebas**
+
+Para garantizar la fiabilidad del backend, se han implementado pruebas unitarias y de integración utilizando **Mocha** y **Chai**. Las pruebas requieren una configuración específica de base de datos para operar en un entorno aislado y no interferir con la base de datos de desarrollo.
+
+### **Requisitos Previos de Base de Datos**
+
+Asegúrate de tener un servidor **PostgreSQL** corriendo localmente. Si utilizas Homebrew en macOS, puedes gestionarlo con:
+```bash
+brew services start postgresql
+
+Se necesitan dos bases de datos en PostgreSQL:
+
+mfnews_dev_db: Para el entorno de desarrollo normal de la aplicación.
+mfnews_test_db: Exclusivamente para la ejecución de pruebas.
+Puedes crear estas bases de datos (si no existen) desde tu cliente psql:
+
+Bash
+psql -U tu_usuario_mac -d postgres
+CREATE DATABASE mfnews_dev_db;
+CREATE DATABASE mfnews_test_db;
+\q
+Además, la base de datos de pruebas (mfnews_test_db) debe contener la tabla news con el siguiente esquema:
+
+SQL
+CREATE TABLE IF NOT EXISTS news (
+    id SERIAL PRIMARY KEY,
+    title VARCHAR(255) NOT NULL,
+    content TEXT NOT NULL,
+    category VARCHAR(100),
+    author VARCHAR(100),
+    date DATE DEFAULT CURRENT_DATE,
+    image_url VARCHAR(255)
+);
+Variables de Entorno para Pruebas
+
+La configuración de la base de datos se gestiona mediante archivos de entorno (.env). Para las pruebas, se utiliza un archivo .env.test que sobrescribe las variables de desarrollo.
+
+./.env (para desarrollo):
+
+Fragmento de código
+DB_HOST=localhost
+DB_PORT=5432
+DB_USER=tu_usuario_postgres
+DB_PASSWORD=tu_password_postgres
+DB_NAME=mfnews_dev_db
+./.env.test (para pruebas):
+
+Fragmento de código
+DB_HOST=localhost
+DB_PORT=5432
+DB_USER=tu_usuario_postgres
+DB_PASSWORD=tu_password_postgres
+DB_NAME=mfnews_test_db
+Ejecución de las Pruebas
+
+Para ejecutar el conjunto completo de pruebas, utiliza el siguiente comando:
+
+Bash
+npm test
+Este comando cargará automáticamente las variables de entorno de /.env.test y limpiará la base de datos mfnews_test_db antes de cada suite de pruebas para asegurar un entorno consistente.
+
