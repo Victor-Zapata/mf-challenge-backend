@@ -1,23 +1,23 @@
-require('dotenv').config(); // Carga las variables de entorno desde .env
-
+// mfnews-backend/db/config.js
 const { Pool } = require('pg');
+const path = require('path');
+const dotenv = require('dotenv'); // Asegúrate de requerir dotenv
+
+// Carga las variables de entorno del .env principal PRIMERO
+dotenv.config({ path: path.resolve(__dirname, '..', '.env') });
+
+// Si NODE_ENV es 'test', carga el .env.test y SOBRESCRIBE las variables
+if (process.env.NODE_ENV === 'test') {
+  console.log('Modo TEST: Cargando .env.test y usando DB de prueba.');
+  dotenv.config({ path: path.resolve(__dirname, '..', '.env.test'), override: true });
+}
 
 const pool = new Pool({
-    user: process.env.DB_USER || 'admin',
-    host: process.env.DB_HOST || 'localhost', 
-    database: process.env.DB_NAME || 'mfnews_db',
-    password: process.env.DB_PASSWORD || 'password',
-    port: process.env.DB_PORT || 5432,
-});
-
-// Función para testear la conexión
-pool.on('connect', () => {
-    console.log('Conectado a la base de datos PostgreSQL.');
-});
-
-pool.on('error', (err) => {
-    console.error('Error inesperado en el cliente de PostgreSQL', err);
-    process.exit(-1); // Termina la aplicación si hay un error crítico en la DB.
+    user: process.env.DB_USER,
+    host: process.env.DB_HOST,
+    port: process.env.DB_PORT ? parseInt(process.env.DB_PORT) : 5432,
+    password: process.env.DB_PASSWORD,
+    database: process.env.DB_NAME, // Ahora siempre usamos DB_NAME, que será sobrescrito por .env.test en modo test
 });
 
 module.exports = pool;

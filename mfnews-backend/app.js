@@ -42,3 +42,5 @@ app.use((err, req, res, next) => {
 app.listen(PORT, () => {
     console.log(`Servidor backend corriendo en http://localhost:${PORT}`);
 });
+
+module.exports = app;

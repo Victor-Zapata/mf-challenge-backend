@@ -35,25 +35,25 @@ exports.getNewsById = async (req, res) => {
 
 //funcion para crear noticia
 exports.createNews = async (req, res) => {
-    // Extrae los datos del cuerpo de la petición (lo que envía el frontend)
-    const { title, body, image_url, author } = req.body;
-
-    // Validación básica de datos 
-    if (!title || !body || !image_url || !author) {
-        return res.status(400).json({ message: 'Faltan campos requeridos: title, body, image_url, author.' });
+    const { title, content, category, author } = req.body;
+  
+    if (!title || !content || !category || !author) {
+      return res.status(400).json({ message: 'Faltan campos requeridos' });
     }
-
+  
     try {
-        const result = await pool.query(
-            'INSERT INTO news (title, body, image_url, author) VALUES ($1, $2, $3, $4) RETURNING *',
-            [title, body, image_url, author]
-        );
-        res.status(201).json(result.rows[0]); 
+      const result = await pool.query(
+        'INSERT INTO news (title, content, category, author) VALUES ($1, $2, $3, $4) RETURNING *',
+        [title, content, category, author]
+      );
+  
+      res.status(201).json(result.rows[0]);
     } catch (err) {
-        console.error('Error al crear noticia:', err.message);
-        res.status(500).json({ message: 'Error interno del servidor al crear la noticia.' });
+      console.error('Error al crear la noticia:', err);
+      res.status(500).json({ message: 'Error al crear la noticia', error: err.message });
     }
-};
+  };
+  
 
 //funcion para editar noticia
 exports.updateNews = async (req, res) => {
@@ -134,7 +134,8 @@ exports.searchNews = async (req, res) => {
     let paramIndex = 1;
 
     if (query) {
-        conditions.push(`(title ILIKE $${paramIndex} OR body ILIKE $${paramIndex})`);
+        // ¡CAMBIO AQUÍ: body por content!
+        conditions.push(`(title ILIKE $${paramIndex} OR content ILIKE $${paramIndex})`);
         queryParams.push(`%${query}%`);
         paramIndex++;
     }
