@@ -38,8 +38,10 @@ describe('API de Noticias', () => {
       const res = await request(app).post('/api/news').send({ title: 'Faltan campos' });
 
       expect(res.statusCode).to.equal(400);
-      expect(res.body.message).to.match(/Faltan campos requeridos/);
+      expect(res.body.message).to.equal('Título y contenido son campos requeridos.'); 
+
     });
+    
   });
 
   describe('GET /api/news', () => {
