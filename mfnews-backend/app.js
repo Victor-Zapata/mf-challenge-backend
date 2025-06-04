@@ -1,28 +1,25 @@
 const express = require('express');
 const cors = require('cors'); 
-const pool = require('./db/config'); // pool de conexiones a la DB
+const pool = require('./db/config'); 
 
-// Importa las rutas de noticias que vamos a crear
 const newsRoutes = require('./routes/news');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
 
 const corsOptions = {
-    origin: ['http://localhost:5173', 'https://mf-challenge-frontend.onrender.com'], // ¡AÑADE ESTO!
+    origin: ['http://localhost:5173', 'https://mf-challenge-frontend.onrender.com'], 
     methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
     credentials: true,
     optionsSuccessStatus: 204
 };
-app.use(cors(corsOptions));
+app.use(cors(corsOptions)); 
 
 // MIDDLEWARES GLOBALES
-app.use(cors()); // Habilita CORS para permitir peticiones desde el frontend
-app.use(express.json()); // Permite a Express leer cuerpos de petición en formato JSON
+app.use(express.json()); 
 
 // MONTAJE DE RUTAS
-// Aquí le decimos a Express que use las rutas definidas en newsRoutes para todo lo que empiece con '/api'
-app.use('/api/news', newsRoutes);
+app.use('/api', newsRoutes); 
 
 // ENDPOINT DE PRUEBA 
 app.get('/', async (req, res) => {
@@ -42,7 +39,7 @@ app.use((req, res, next) => {
 
 // MIDDLEWARE CENTRALIZADO DE MANEJO DE ERRORES (para errores de servidor 500)
 app.use((err, req, res, next) => {
-    console.error(err.stack); // Imprime el stack de errores para depuración
+    console.error(err.stack); 
     res.status(500).json({ message: 'Algo salió mal en el servidor!', error: err.message });
 });
 
