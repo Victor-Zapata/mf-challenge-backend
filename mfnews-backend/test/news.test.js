@@ -1,17 +1,8 @@
-// mfnews-backend/test/news.test.js
-
 const request = require('supertest');
-const app = require('../app'); // La instancia de tu app Express
-
-// NO NECESITAS require('chai') ni chai.use(chaiHttp) AQUÍ,
-// ya que 'setup.js' lo hace globalmente y configura 'expect'
-
-// No necesitas 'pool' aquí si solo lo usas en setup.js
+const app = require('../app'); 
 
 describe('API de Noticias', () => {
   let createdNewsId;
-
-  // No necesitas beforeEach y afterAll aquí, ya los maneja setup.js
 
   describe('POST /api/news', () => {
     it('debería crear una noticia nueva', async () => {
@@ -24,12 +15,9 @@ describe('API de Noticias', () => {
 
       const res = await request(app).post('/api/news').send(newNews);
 
-      // console.log(res.statusCode, res.body); // Descomenta para depurar respuestas
-
-      expect(res.statusCode).to.equal(201); // Usa .to.equal() con Chai
+      expect(res.statusCode).to.equal(201); 
       expect(res.body).to.have.property('id');
       expect(res.body.title).to.equal(newNews.title);
-      // Asegúrate de verificar que el ID es un número
       expect(res.body.id).to.be.a('number');
       createdNewsId = res.body.id;
     });
@@ -46,7 +34,6 @@ describe('API de Noticias', () => {
 
   describe('GET /api/news', () => {
     it('debería devolver un listado de noticias', async () => {
-        // Inserta una noticia para asegurar que haya datos
         await request(app).post('/api/news').send({
             title: 'Noticia para listado',
             content: 'Contenido de listado',
@@ -64,7 +51,6 @@ describe('API de Noticias', () => {
 
   describe('GET /api/news/:id', () => {
     let localNewsId;
-    // Creamos una noticia específicamente para este bloque de tests
     beforeEach(async () => {
         const res = await request(app).post('/api/news').send({
             title: 'Noticia para GET ID',
@@ -114,7 +100,7 @@ describe('API de Noticias', () => {
       const updatedTitle = 'Título actualizado de prueba';
       const res = await request(app)
         .put(`/api/news/${localNewsId}`)
-        .send({ title: updatedTitle, content: 'Contenido actualizado' }); // ¡Importante! Asegúrate de que el campo coincida (body vs content)
+        .send({ title: updatedTitle, content: 'Contenido actualizado' }); 
 
       expect(res.statusCode).to.equal(200);
       expect(res.body.title).to.equal(updatedTitle);
@@ -196,13 +182,12 @@ describe('API de Noticias', () => {
       expect(res.body.message).to.match(/eliminada exitosamente/i);
       expect(res.body).to.have.property('id', localNewsIdToDelete);
 
-      // Opcional: verificar que ya no existe después de la eliminación
       const getRes = await request(app).get(`/api/news/${localNewsIdToDelete}`);
       expect(getRes.statusCode).to.equal(404);
     });
 
     it('debería devolver 404 si ya fue eliminada o no existe', async () => {
-      const nonExistentId = 999999; // Un ID que no existe
+      const nonExistentId = 999999; 
       const res = await request(app).delete(`/api/news/${nonExistentId}`);
 
       expect(res.statusCode).to.equal(404);

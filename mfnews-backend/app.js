@@ -1,6 +1,6 @@
 const express = require('express');
-const cors = require('cors'); // Importa el módulo CORS
-const pool = require('./db/config'); // Tu pool de conexiones a la DB
+const cors = require('cors'); 
+const pool = require('./db/config'); // pool de conexiones a la DB
 
 // Importa las rutas de noticias que vamos a crear
 const newsRoutes = require('./routes/news');
