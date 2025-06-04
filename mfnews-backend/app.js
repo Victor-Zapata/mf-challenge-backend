@@ -8,6 +8,14 @@ const newsRoutes = require('./routes/news');
 const app = express();
 const PORT = process.env.PORT || 3000;
 
+const corsOptions = {
+    origin: ['http://localhost:5173', 'https://mf-challenge-frontend.onrender.com'], // ¡AÑADE ESTO!
+    methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
+    credentials: true,
+    optionsSuccessStatus: 204
+};
+app.use(cors(corsOptions));
+
 // MIDDLEWARES GLOBALES
 app.use(cors()); // Habilita CORS para permitir peticiones desde el frontend
 app.use(express.json()); // Permite a Express leer cuerpos de petición en formato JSON
